@@ -1,11 +1,16 @@
 package com.bramura.controlefinanceiroapi.service;
 
 import com.bramura.controlefinanceiroapi.ControlefinanceiroapiApplication;
+
 import com.bramura.controlefinanceiroapi.dto.TransacaoDTO;
 import com.bramura.controlefinanceiroapi.dto.SaldoDTO;
 import com.bramura.controlefinanceiroapi.dto.ResumoDTO;
+
 import com.bramura.controlefinanceiroapi.exception.TransacaoNaoEncontradaException;
+
 import com.bramura.controlefinanceiroapi.model.Transacao;
+import com.bramura.controlefinanceiroapi.model.TipoTransacao;
+
 import com.bramura.controlefinanceiroapi.repository.TransacaoRepository;
 
 import org.springframework.stereotype.Service;
@@ -30,7 +35,7 @@ public class TransacaoService {
     public Transacao buscarPorId(Long id) {
         
         return repository.findById(id)
-                .orElseThrow(() -> new TransacaoNaoEncontradaException("Transação não encontrada"));
+                .orElseThrow(() -> new TransacaoNaoEncontradaException("Transação não encontrada COM ID: " + id));
     }
 
     // CRIAR
@@ -71,7 +76,7 @@ public class TransacaoService {
         return repository.findByCategoria(categoria);
     }
 
-    public List<Transacao> buscarPorTipo(String tipo) {
+    public List<Transacao> buscarPorTipo(TipoTransacao tipo) {
         return repository.findByTipo(tipo);
     }
 
@@ -84,11 +89,11 @@ public class TransacaoService {
 
         for (Transacao transacao : transacoes) {
 
-            if ("receita".equalsIgnoreCase(transacao.getTipo())) {
+            if (transacao.getTipo() == TipoTransacao.RECEITA) {
                 totalReceitas += transacao.getValor();
             }
 
-            if ("despesa".equalsIgnoreCase(transacao.getTipo())) {
+            if (transacao.getTipo() == TipoTransacao.DESPESA) {
                 totalDespesas += transacao.getValor();
             }
         }
@@ -110,12 +115,12 @@ public class TransacaoService {
 
         for (Transacao transacao : transacoes) {
 
-            if ("receita".equalsIgnoreCase(transacao.getTipo())) {
+            if (transacao.getTipo() == TipoTransacao.RECEITA) {
                 
                 quantidadeReceitas++;
                 totalReceitas += transacao.getValor();
 
-            } else if ("despesa".equalsIgnoreCase(transacao.getTipo())) {
+            } else if (transacao.getTipo() == TipoTransacao.DESPESA) {
                 
                 quantidadeDespesas++;
                 totalDespesas += transacao.getValor();

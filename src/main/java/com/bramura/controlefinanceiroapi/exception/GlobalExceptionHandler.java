@@ -1,6 +1,7 @@
 package com.bramura.controlefinanceiroapi.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
 
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
         Map<String, String> erros = new HashMap<>();
 
@@ -21,7 +22,11 @@ public class GlobalExceptionHandler {
             erros.put(error.getField(), error.getDefaultMessage());
         });
 
-        return erros;
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("mensagem", "Erro de validação");
+        resposta.put("erros", erros);
+
+        return resposta;
     }
 
     @ExceptionHandler(TransacaoNaoEncontradaException.class)
@@ -32,6 +37,18 @@ public class GlobalExceptionHandler {
         Map<String, String> erro = new HashMap<>();
 
         erro.put("erro", ex.getMessage());
+
+        return erro;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+
+    public Map<String, String> handleEnumInvalido(HttpMessageNotReadableException ex) {
+
+        Map<String, String> erro = new HashMap<>();
+
+        erro.put("erro", "Tipo inválido. Valores permitidos: RECEITA ou DESPESA.");
 
         return erro;
     }

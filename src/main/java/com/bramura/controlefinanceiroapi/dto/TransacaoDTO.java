@@ -1,5 +1,7 @@
 package com.bramura.controlefinanceiroapi.dto;
 
+import com.bramura.controlefinanceiroapi.model.TipoTransacao;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,8 +13,8 @@ public class TransacaoDTO {
     @NotNull(message = "O campo 'valor' é obrigatório.")
     private Double valor;
 
-    @NotBlank(message = "O campo 'tipo' é obrigatório.")
-    private String tipo;
+    @NotNull(message = "O campo 'tipo' é obrigatório.")
+    private TipoTransacao tipo;
 
     @NotBlank(message = "O campo 'categoria' é obrigatório.")
     private String categoria;
@@ -33,11 +35,11 @@ public class TransacaoDTO {
         this.valor = valor;
     }
 
-    public String getTipo() {
+    public TipoTransacao getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoTransacao tipo) {
         this.tipo = tipo;
     }
 

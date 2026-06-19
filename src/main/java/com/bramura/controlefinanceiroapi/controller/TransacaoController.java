@@ -1,5 +1,6 @@
 package com.bramura.controlefinanceiroapi.controller;
 
+import com.bramura.controlefinanceiroapi.model.TipoTransacao;
 import com.bramura.controlefinanceiroapi.model.Transacao;
 import com.bramura.controlefinanceiroapi.dto.TransacaoDTO;
 import com.bramura.controlefinanceiroapi.dto.SaldoDTO;
@@ -29,39 +30,57 @@ public class TransacaoController {
 
     // LISTAR TODAS AS TRANSAÇÕES
     @GetMapping("/")
-    public ResponseEntity<List<Transacao>> listar() {
-        return ResponseEntity.ok(service.listarTransacao());
+    public ResponseEntity<ApiResponse<List<Transacao>>> listar() {
+
+        List<Transacao> transacoes = service.listarTransacao();
+
+        ApiResponse<List<Transacao>> resposta = new ApiResponse<>("Transações listadas com sucesso", transacoes);
+
+        return ResponseEntity.ok(resposta);
     }
 
     // BUSCAR POR ID    
     @GetMapping("/{id}")
-    public ResponseEntity<Transacao> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Transacao>> buscarPorId(@PathVariable Long id) {
         
-        return ResponseEntity.ok(service.buscarPorId(id));
+        Transacao transacao = service.buscarPorId(id);
+
+        ApiResponse<Transacao> resposta = new ApiResponse<>("Transação encontrada com sucesso", transacao);
+
+        return ResponseEntity.ok(resposta);
     }
 
     // CRIAR
     @PostMapping("/")
-    public ResponseEntity<Transacao> criar(@Valid @RequestBody TransacaoDTO dto) {  
+    public ResponseEntity<ApiResponse<Transacao>> criar(@Valid @RequestBody TransacaoDTO dto) {  
         
         Transacao transacaoCriada = service.criarTransacao(dto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(transacaoCriada);
+        ApiResponse<Transacao> resposta = new ApiResponse<>("Transação criada com sucesso", transacaoCriada);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
     }
 
     // ATUALIZAR
     @PutMapping("/{id}")
-    public ResponseEntity<Transacao> atualizar(@PathVariable Long id, @Valid @RequestBody TransacaoDTO dto) {
+    public ResponseEntity<ApiResponse<Transacao>> atualizar(@PathVariable Long id, @Valid @RequestBody TransacaoDTO dto) {
         
-        return ResponseEntity.ok(service.atualizarTransacao(id, dto));
+        Transacao transacaoAtualizada = service.atualizarTransacao(id, dto);
+
+        ApiResponse<Transacao> resposta = new ApiResponse<>("Transação atualizada com sucesso", transacaoAtualizada);
+        
+        return ResponseEntity.ok(resposta);
     }
 
     // DELETAR
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<String>> deletar(@PathVariable Long id) {
         
         service.deletarTransacao(id);
-        return ResponseEntity.noContent().build();
+
+        ApiResponse<String> resposta = new ApiResponse<>("Transação removida com sucesso", null);
+
+        return ResponseEntity.ok(resposta);
     }
 
     @GetMapping("/categoria/{categoria}")
@@ -75,7 +94,7 @@ public class TransacaoController {
 
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity<List<Transacao>> buscarPorTipo(
-        @PathVariable String tipo) {
+        @PathVariable TipoTransacao tipo) {
 
         return ResponseEntity.ok(
             service.buscarPorTipo(tipo)

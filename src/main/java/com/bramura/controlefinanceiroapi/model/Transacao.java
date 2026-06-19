@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,13 +26,14 @@ public class Transacao {
     @NotBlank(message = "A categoria é obrigatória")
     private String categoria;
 
-    @NotBlank(message = "O tipo é obrigatório")
-    private String tipo; // "receita" ou "despesa"
+    @NotNull(message = "O tipo é obrigatório")
+    @Enumerated(EnumType.STRING)
+    private TipoTransacao tipo; // "receita" ou "despesa"
     
     public Transacao() {
     }
 
-    public Transacao(Long id,String descricao, Double valor, String categoria, String tipo) {
+    public Transacao(Long id,String descricao, Double valor, String categoria, TipoTransacao tipo) {
         this.id = id;
         this.descricao = descricao;
         this.valor = valor;
@@ -69,11 +73,11 @@ public class Transacao {
         this.categoria = categoria;
     }
 
-    public String getTipo() {
+    public TipoTransacao getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoTransacao tipo) {
         this.tipo = tipo;
     }
 }
